@@ -42,9 +42,16 @@ dependency to install. The deliverable is the one script plus its docs.
   client sets `O_NDELAY` on its write end of the pipe and ignores the return
   value of `write()`, so a script that blocks causes the client to silently
   drop forwarded messages. Do not remove the backgrounding.
-- The `drawextinfo` branch pipes through a subshell to split multi-line
-  payloads. Shop inventory and other bulk output can arrive as one payload
-  spanning several display lines.
+- The `*)` catch-all at the end of the main loop is how multi-line payloads
+  are handled, and is load-bearing. Message text may contain embedded
+  newlines, so bulk output such as shop inventory arrives as several reads.
+  Only the first carries the `watch <cmd>` prefix and the leading integer
+  fields; the rest fall through to the catch-all and are checked as plain
+  text. Do not field-strip them, and do not add a branch above the catch-all
+  that swallows unrecognised lines.
+- The `watch*|monitor*` branch just above the catch-all exists so that
+  protocol lines for commands this script did not subscribe to, and bare
+  `watch <cmd>` lines carrying no data, are not mistaken for message text.
 - `line=${line%"$(printf '\r')"}` trims a possible trailing carriage return.
   Keep it; the client's Windows path has its own line-ending quirks. The inner
   quotes are required by SC2295 and must stay.

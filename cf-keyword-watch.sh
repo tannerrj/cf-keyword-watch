@@ -146,11 +146,7 @@ while IFS= read -r line; do
     case "$line" in
         "watch drawextinfo "*)
             payload=${line#watch drawextinfo }
-            # Shop inventory and other bulk output can arrive as a multi-line
-            # block in one payload; split so each item is checked separately.
-            printf '%s\n' "$(strip_fields 3 "$payload")" | while IFS= read -r l; do
-                check_keywords "$l"
-            done
+            check_keywords "$(strip_fields 3 "$payload")"
             ;;
 
         "watch drawinfo "*)
@@ -189,6 +185,21 @@ while IFS= read -r line; do
                     say "unknown command: $verb (add|del|list|debug)"
                     ;;
             esac
+            ;;
+
+        watch*|monitor*)
+            # Protocol lines for commands this script did not subscribe to,
+            # and bare "watch <cmd>" lines carrying no data. Not message text.
+            ;;
+
+        *)
+            # Continuation of a multi-line payload. script_watch() writes the
+            # payload verbatim and the client's message text may contain
+            # embedded newlines, so bulk output such as shop inventory arrives
+            # as several reads. Only the first carries the "watch <cmd>" prefix
+            # and the leading integer fields; the rest are plain text and must
+            # not be field-stripped.
+            check_keywords "$line"
             ;;
     esac
 done
