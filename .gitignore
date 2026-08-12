@@ -1,0 +1,11 @@
+# Logs produced by the script
+*.log
+keyword-watch.log
+
+# Editor and OS noise
+*~
+*.swp
+.DS_Store
+
+# Local overrides
+.env
