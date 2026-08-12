@@ -73,15 +73,26 @@ notify() {
     elif command -v powershell.exe >/dev/null 2>&1; then
         # Dependency-free Windows fallback: tray balloon, not a real toast.
         # Swap in BurntToast or SnoreToast if you want a proper notification.
-        powershell.exe -NoProfile -WindowStyle Hidden -Command "
-            Add-Type -AssemblyName System.Windows.Forms
-            \$n = New-Object System.Windows.Forms.NotifyIcon
-            \$n.Icon = [System.Drawing.SystemIcons]::Information
-            \$n.Visible = \$true
-            \$n.ShowBalloonTip(5000, 'Crossfire', '$body', 'Info')
-            Start-Sleep -Seconds 6
-            \$n.Dispose()
-        " >/dev/null 2>&1 &
+        #
+        # The body lands inside a PowerShell single-quoted string, which
+        # escapes a literal quote by doubling it. Message text comes from the
+        # server, so an item or player name carrying an apostrophe would
+        # otherwise close the string early and leave the remainder to be
+        # parsed as code. Double every quote first. The whole branch runs in a
+        # backgrounded subshell so the escaping cannot block the read loop
+        # either.
+        (
+            _b=$(printf '%s' "$body" | sed "s/'/''/g")
+            powershell.exe -NoProfile -WindowStyle Hidden -Command "
+                Add-Type -AssemblyName System.Windows.Forms
+                \$n = New-Object System.Windows.Forms.NotifyIcon
+                \$n.Icon = [System.Drawing.SystemIcons]::Information
+                \$n.Visible = \$true
+                \$n.ShowBalloonTip(5000, 'Crossfire', '$_b', 'Info')
+                Start-Sleep -Seconds 6
+                \$n.Dispose()
+            " >/dev/null 2>&1
+        ) &
     else
         printf '\a' >&2 &
     fi

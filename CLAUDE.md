@@ -42,6 +42,13 @@ dependency to install. The deliverable is the one script plus its docs.
   client sets `O_NDELAY` on its write end of the pipe and ignores the return
   value of `write()`, so a script that blocks causes the client to silently
   drop forwarded messages. Do not remove the backgrounding.
+- The PowerShell branch of `notify()` wraps its work in a `( ... ) &` subshell
+  and doubles every single quote in the body first. Both parts are required.
+  The body is interpolated into a PowerShell single-quoted string, and message
+  text is server-supplied, so an item or player name containing an apostrophe
+  would close the string early and leave the rest to be parsed as code.
+  Doubling is how PowerShell escapes a quote inside such a string. The
+  subshell keeps the `sed` off the read loop while preserving the rule above.
 - The `*)` catch-all at the end of the main loop is how multi-line payloads
   are handled, and is load-bearing. Message text may contain embedded
   newlines, so bulk output such as shop inventory arrives as several reads.
