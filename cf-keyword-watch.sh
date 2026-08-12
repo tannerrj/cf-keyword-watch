@@ -137,7 +137,7 @@ check_keywords() {
 }
 
 # --- startup -------------------------------------------------------------
-log "started; player=${CF_PLAYER_NAME:-unknown} server=${CF_SERVER_NAME:-unknown} keywords: $KEYWORDS"
+log "started; player=${CF_PLAYER_NAME:-unknown} server=${CF_SERVER_NAME:-unknown} debug=$DEBUG keywords: $KEYWORDS"
 
 # Subscribe. An empty watch string matches every command in script_watch(),
 # so "watch" alone is the discovery-pass subscription; the two below are the
@@ -193,6 +193,7 @@ while IFS= read -r line; do
                 debug)
                     DEBUG="$rest"
                     say "debug set to $DEBUG"
+                    log "debug set to $DEBUG"
                     ;;
                 *)
                     say "unknown command: $verb (add|del|list|debug)"
