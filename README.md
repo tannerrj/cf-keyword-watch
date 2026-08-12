@@ -116,6 +116,7 @@ set them, so treat both as optional.
 
 Copyright (c) 2026 Rick Tanner
 
-Distributed under the GNU General Public License, version 2, matching the
-license of the Crossfire client it is written against. See `LICENSE` for the
-full text.
+Distributed under the GNU General Public License, either version 2 of the
+License or, at your option, any later version, matching the license of the
+Crossfire client it is written against. `LICENSE` holds the full text of
+version 2.

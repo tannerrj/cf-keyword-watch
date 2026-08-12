@@ -75,11 +75,15 @@ dependency to install. The deliverable is the one script plus its docs.
 - The copyright holder line and year live in the `## License` section of
   `README.md`, not in `LICENSE`. They may need changing depending on which
   handle this is published under.
-- `cf-keyword-watch.sh` carries the GPL notice header from the appendix at the
-  end of `LICENSE`, with the "or (at your option) any later version" clause
-  dropped so it reads as GPL-2.0-only, matching the `README.md` statement. If
-  the project should be GPL-2.0-or-later instead, that clause has to be
-  restored in the script header and the README wording changed to match.
+- The project is GPL-2.0-or-later, matching the Crossfire client it is written
+  against. `cf-keyword-watch.sh` carries the notice header from the appendix
+  at the end of `LICENSE`, verbatim, including the "either version 2 of the
+  License, or (at your option) any later version" clause; `README.md` says the
+  same in prose. `LICENSE` holds the version 2 text, which is correct for
+  or-later: the extra permission is granted by the notice, not by the license
+  file. The header also carries `SPDX-License-Identifier: GPL-2.0-or-later`,
+  which is what license scanners and GitHub read; without it they infer plain
+  GPL-2.0 from `LICENSE` alone. Keep all four consistent if any one changes.
 - shellcheck 0.11.0 reports zero findings under `-s sh`, `-s dash`, and
   `-s bash`, and `sh -n` passes. The one first-run finding was SC2295 on the
   carriage-return trim, fixed by quoting rather than by a disable comment. The
