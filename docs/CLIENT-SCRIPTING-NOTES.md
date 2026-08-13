@@ -10,6 +10,14 @@ Files referenced:
 - `common/p_cmd.c`
 - `common/client.c`
 
+Upstream prose documentation of the same interface, useful for orientation and
+for the JXClient side, which is not covered here:
+
+<https://wiki.cross-fire.org/client_side_scripting:client_scripting_interface-basic_howto>
+
+Where it and the source disagree, the source wins and the disagreement is
+noted inline below.
+
 ## Model
 
 A script is an external process, not a loaded module. The client opens two
@@ -38,13 +46,21 @@ before `execvp`, so arguments are supported.
 string prefix. A NULL name resolves to script 0 when exactly one script is
 running.
 
-Observed against a running GTK2 client rather than read from source: the name
-a script is registered under is the string passed to `script`, so an
-absolute-path launch registers the absolute path. Because the match is a
-prefix and not a substring, the bare file name then fails to resolve and the
-client answers "No such running script". The index from `scripts` avoids the
-question entirely. This has not been traced back to the assignment in
-`script_init()`; if the code is read later, confirm and drop this caveat.
+That prefix matching is doubtful in practice, and the point is unresolved:
+
+- Observed, GTK2 client: `scripttell cf-keyword-watch.sh <text>` after an
+  absolute-path launch answers "No such running script". A numerical ID
+  works.
+- The wiki documents name-based IDs as JXClient only, describing them as
+  unique alphanumeric substrings of the path usable in lieu of numbers, with
+  no equivalent for the C client.
+- The reading of `script_by_name()` above says the C client does fall back to
+  a string prefix, which disagrees with both of the preceding points.
+
+Not worth resolving unless something depends on it, since the numerical ID
+from `scripts` works on both clients and is what the wiki documents. If the
+code is read again, settle which of the three is right and cut this list
+down.
 
 Under `#ifdef HAVE_LUA` the same table also registers `lua_load`, `lua_list`,
 and `lua_kill`, and `extended_command()` calls `script_lua_command()` ahead of

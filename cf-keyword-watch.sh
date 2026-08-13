@@ -29,13 +29,15 @@
 #     script C:/msys64/usr/bin/bash.exe /c/scripts/cf-keyword-watch.sh fire
 # NOTE: no quote handling exists in script_init(), so avoid paths with spaces.
 #
-# Live control from the client console. Run "scripts" first for the index; a
-# name argument is matched as a prefix of the path you launched with, so the
-# bare file name will not resolve after an absolute-path launch.
+# Live control from the client console. Run "scripts" first for the numerical
+# ID and use that; a file name gives "No such running script" on this client.
+# scripttell and friends are client commands, documented upstream at
+# https://wiki.cross-fire.org/client_side_scripting:client_scripting_interface-basic_howto
 #     scripttell 1 add lightning
 #     scripttell 1 del fire
 #     scripttell 1 list
 #     scripttell 1 debug 1
+#     scripttell 1 help      (prints the above into the message pane)
 #
 # Stop it:
 #     scriptkill 1     (or just "scriptkill" if it is the only one running)
@@ -205,8 +207,20 @@ while IFS= read -r line; do
                     say "debug set to $DEBUG"
                     log "debug set to $DEBUG"
                     ;;
+                help)
+                    # One draw per line. The message pane is narrow, so keep
+                    # each line short rather than wrapping one long one.
+                    say "cf-keyword-watch commands, via scripttell:"
+                    say "  add <word>  start watching for <word>"
+                    say "  del <word>  stop watching for <word>"
+                    say "  list        show the keyword list"
+                    say "  debug 0|1   log every line received"
+                    say "  help        this message"
+                    say "log: $LOG"
+                    say "watching: $KEYWORDS"
+                    ;;
                 *)
-                    say "unknown command: $verb (add|del|list|debug)"
+                    say "unknown command: $verb (add|del|list|debug|help)"
                     ;;
             esac
             ;;

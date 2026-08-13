@@ -67,24 +67,34 @@ first argument:
 
 ### Live control
 
-The client's `scripttell` command sends a line to a running script. Run
-`scripts` first to get the index, then address the script by that:
+`script`, `scripts`, `scripttell`, `scriptkill`, and `scriptkillall` are
+client commands and are not part of this project. The upstream reference is
+the client scripting interface page on the Crossfire wiki:
+
+<https://wiki.cross-fire.org/client_side_scripting:client_scripting_interface-basic_howto>
+
+`scripttell <id> <string>` sends a line to a running script. Run `scripts`
+for the numerical ID, then use it. The verbs below are this script's own:
 
     scripttell 1 add lightning
     scripttell 1 del fire
     scripttell 1 list
     scripttell 1 debug 1
+    scripttell 1 help
 
-The index is the reliable form. A script is registered under the string you
-passed to `script`, and a name argument is matched as a *prefix* of it, so if
-you launched with an absolute path then the bare file name will not resolve:
+`help` prints the command list into the message pane, along with the log path
+and the keywords currently being watched, so the reference is available in
+game without leaving the client.
 
-    script /home/you/scripts/cf-keyword-watch.sh fire
+Address the script by its numerical ID, not its file name. The wiki documents
+name-based IDs as a JXClient feature, and on the GTK client a file name gives
+"No such running script":
+
     scripttell cf-keyword-watch.sh debug 1     -> No such running script
-    scripttell /home/you/scripts/cf debug 1    -> works, prefix of the name
+    scripttell 1 debug 1                       -> works
 
-The name cannot be omitted. `scripttell debug 1` reads `debug` as the script
-name and fails the same way.
+The ID cannot be omitted either. `scripttell debug 1` reads `debug` as the ID
+and fails the same way.
 
 ### Listing and stopping
 
@@ -92,9 +102,8 @@ name and fails the same way.
     scriptkill 1
     scriptkillall
 
-`scripts` lists the running scripts with the indices and registered names that
-`scripttell` and `scriptkill` expect. `scriptkill` with no argument works when
-exactly one script is running; otherwise pass an index or a name prefix.
+`scripts` lists the running scripts with the numerical IDs that `scripttell`
+and `scriptkill` expect.
 
 ## Configuration
 
