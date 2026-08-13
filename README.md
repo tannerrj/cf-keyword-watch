@@ -112,16 +112,15 @@ set them, so treat both as optional.
 - Keyword matching is case-insensitive substring matching on whitespace
   separated words. Multi-word phrases passed in quotes get split at launch.
   Phrase matching needs the keyword list changed to newline delimited.
-- The three-field strip on `drawextinfo` payloads assumes the server sends
-  `<color> <type> <subtype> <text>`. Confirm with `debug 1` against your own
-  server before relying on it.
 - Notification calls are all backgrounded on purpose. The client sets
   `O_NDELAY` on its write end of the pipe and ignores the `write()` return
   value, so a script that blocks will cause the client to silently drop
   messages. Do not remove the trailing `&` from any branch of `notify()`.
 - The client's `script_process()` handles one script per call and returns
   immediately. With several scripts running, a chatty one can starve the
-  others.
+  others. Launching the script again without stopping the old one leaves both
+  running, both matching, and both writing to the same log, so matches appear
+  duplicated. `scripts` lists what is running and `scriptkillall` clears them.
 
 ## License
 

@@ -122,6 +122,22 @@ space, so the payload is passed through with `%s` verbatim. Message text may
 contain embedded newlines; bulk output such as shop inventory can arrive as
 one payload spanning several display lines.
 
+Confirmed against a live server (shop inventory, GTK2 client, local server).
+The three leading integers are as documented above, and the text of a bulk
+message begins on the line *after* them rather than on the same line:
+
+    watch drawextinfo 0 9 1
+    The shop contains:
+    51 arrows
+    54 bolts
+    ...
+
+So for this message shape the head line carries the fields and nothing else,
+and every display line is a continuation. A reader that only handles the line
+beginning `watch drawextinfo` sees no message text at all. Whether a short
+single-line `drawextinfo` puts its text on the head line has not been
+observed; code that strips the fields should cope with both.
+
 ### monitor output
 
     monitor <repeat> <must_send> <command>

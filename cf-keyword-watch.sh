@@ -113,7 +113,15 @@ strip_fields() {
     _s=$2
     while [ "$_n" -gt 0 ]; do
         _rest=${_s#* }
-        [ "$_rest" = "$_s" ] && break
+        if [ "$_rest" = "$_s" ]; then
+            # No space left, so the field being stripped is the last token and
+            # no message text follows it. Confirmed live: a drawextinfo head
+            # line is "watch drawextinfo 0 9 1" with the text starting on the
+            # next line. Returning the leftover integer here would put it
+            # through keyword matching and false-match a numeric keyword.
+            _s=""
+            break
+        fi
         _s=$_rest
         _n=$((_n - 1))
     done

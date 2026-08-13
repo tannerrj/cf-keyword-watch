@@ -65,10 +65,13 @@ dependency to install. The deliverable is the one script plus its docs.
 
 ## Open items
 
-- The three-field strip on `drawextinfo` payloads assumes the server sends
-  `<color> <type> <subtype> <text>`. This has not been confirmed against a
-  live server. Confirm by running with `CF_WATCH_DEBUG=1` and reading the log,
-  or by reading `DrawExtInfoCmd` in the client tree.
+- The three-field strip on `drawextinfo` is confirmed against a live server.
+  A shop listing arrives as `watch drawextinfo 0 9 1` with the text starting
+  on the next line, so the layout is `<color> <type> <subtype>` exactly as
+  assumed. See the confirmed block in `docs/CLIENT-SCRIPTING-NOTES.md`.
+  Because the head line carries no text for this shape, `strip_fields` returns
+  empty when it runs out of fields rather than the trailing integer; without
+  that, a numeric keyword false-matches on every `drawextinfo`.
 - `LICENSE` now holds the verbatim GPL-2.0 text from
   `https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt`. Do not edit it; the
   license text is only valid unmodified.
