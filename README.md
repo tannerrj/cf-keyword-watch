@@ -1,5 +1,7 @@
 # cf-keyword-watch
 
+[![shellcheck](https://github.com/tannerrj/cf-keyword-watch/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/tannerrj/cf-keyword-watch/actions/workflows/shellcheck.yml)
+
 A client-side script for the Crossfire GTK client that watches the message
 window for keywords and alerts the player when one appears.
 
