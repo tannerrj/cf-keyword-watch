@@ -38,6 +38,14 @@ before `execvp`, so arguments are supported.
 string prefix. A NULL name resolves to script 0 when exactly one script is
 running.
 
+Observed against a running GTK2 client rather than read from source: the name
+a script is registered under is the string passed to `script`, so an
+absolute-path launch registers the absolute path. Because the match is a
+prefix and not a substring, the bare file name then fails to resolve and the
+client answers "No such running script". The index from `scripts` avoids the
+question entirely. This has not been traced back to the assignment in
+`script_init()`; if the code is read later, confirm and drop this caveat.
+
 Under `#ifdef HAVE_LUA` the same table also registers `lua_load`, `lua_list`,
 and `lua_kill`, and `extended_command()` calls `script_lua_command()` ahead of
 `handle_local_command()`. That is an in-process Lua engine, entirely separate

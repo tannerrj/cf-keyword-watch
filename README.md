@@ -65,23 +65,34 @@ first argument:
 
 ### Live control
 
-The client's `scripttell` command sends a line to a running script. The script
-name can be abbreviated to any unique prefix, and can be omitted entirely if
-only one script is running.
+The client's `scripttell` command sends a line to a running script. Run
+`scripts` first to get the index, then address the script by that:
 
-    scripttell cf-keyword-watch.sh add lightning
-    scripttell cf-keyword-watch.sh del fire
-    scripttell cf-keyword-watch.sh list
-    scripttell cf-keyword-watch.sh debug 1
+    scripttell 1 add lightning
+    scripttell 1 del fire
+    scripttell 1 list
+    scripttell 1 debug 1
+
+The index is the reliable form. A script is registered under the string you
+passed to `script`, and a name argument is matched as a *prefix* of it, so if
+you launched with an absolute path then the bare file name will not resolve:
+
+    script /home/you/scripts/cf-keyword-watch.sh fire
+    scripttell cf-keyword-watch.sh debug 1     -> No such running script
+    scripttell /home/you/scripts/cf debug 1    -> works, prefix of the name
+
+The name cannot be omitted. `scripttell debug 1` reads `debug` as the script
+name and fails the same way.
 
 ### Listing and stopping
 
     scripts
-    scriptkill cf-keyword-watch.sh
+    scriptkill 1
     scriptkillall
 
-`scriptkill` with no argument works when exactly one script is running.
-Numeric indices from the `scripts` listing also work: `scriptkill 1`.
+`scripts` lists the running scripts with the indices and registered names that
+`scripttell` and `scriptkill` expect. `scriptkill` with no argument works when
+exactly one script is running; otherwise pass an index or a name prefix.
 
 ## Configuration
 

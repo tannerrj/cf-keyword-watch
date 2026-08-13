@@ -29,14 +29,16 @@
 #     script C:/msys64/usr/bin/bash.exe /c/scripts/cf-keyword-watch.sh fire
 # NOTE: no quote handling exists in script_init(), so avoid paths with spaces.
 #
-# Live control from the client console:
-#     scripttell cf-keyword-watch.sh add lightning
-#     scripttell cf-keyword-watch.sh del fire
-#     scripttell cf-keyword-watch.sh list
-#     scripttell cf-keyword-watch.sh debug 1
+# Live control from the client console. Run "scripts" first for the index; a
+# name argument is matched as a prefix of the path you launched with, so the
+# bare file name will not resolve after an absolute-path launch.
+#     scripttell 1 add lightning
+#     scripttell 1 del fire
+#     scripttell 1 list
+#     scripttell 1 debug 1
 #
 # Stop it:
-#     scriptkill cf-keyword-watch.sh     (or just "scriptkill" if it is alone)
+#     scriptkill 1     (or just "scriptkill" if it is the only one running)
 #
 # Environment:
 #     CF_WATCH_LOG    log file path (default ~/.crossfire/keyword-watch.log)
